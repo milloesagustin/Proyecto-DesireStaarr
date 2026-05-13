@@ -1,4 +1,4 @@
-package com.example.service_skus.model;
+package com.example.service_inventario.model;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -9,27 +9,20 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+
 @Entity
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-
-public class VarianteSku {
-
-    @Id
+public class Inventario {
+@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long idSku; //PK tipo string ej: POL-V-ROJO-M
+    private Long id;
 
-    private Long idProducto; //FK
-    private String talla; //s,m,l,xl
-    private String color; //rojo,azul,etc
-    private String codigoBarras;
+    private Long IdSku; 
+    private int cantidadActual;
+    private int stockMinimo;
 
-
-    @Transient
-    private Object producto;
-
-    
-
-
+    @Transient // Para mostrar los datos del SKU sin guardarlos en esta DB
+    private Object sku;
 }

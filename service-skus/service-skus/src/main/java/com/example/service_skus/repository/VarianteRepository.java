@@ -7,10 +7,12 @@ import com.example.service_skus.model.VarianteSku;
 import java.util.List;
 
 @Repository
-public interface VarianteRepository extends JpaRepository<VarianteSku,String>{
+public interface VarianteRepository extends JpaRepository<VarianteSku,Long>{
 
     List<VarianteSku> findByTalla(String talla);
 
     List<VarianteSku> findByIdProducto(Long idProducto);
+
+    List<VarianteSku> findByColor(String color);
 
 }
