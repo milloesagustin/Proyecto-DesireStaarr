@@ -67,7 +67,11 @@ public class InventarioService {
     @Transactional
     public Inventario actualizarStock(Long idSku, int nuevaCantidad) {
         
+<<<<<<< HEAD
         Inventario inv = repository.findByidSku(idSku)
+=======
+        Inventario inv = repository.findByIdSku(idSku)
+>>>>>>> 3839919bb050965f03e4e752303f8a3f4689df8a
                 .orElseThrow(() -> new RuntimeException("Inventario no encontrado para el SKU: " + idSku));
         
         inv.setCantidadActual(nuevaCantidad);
