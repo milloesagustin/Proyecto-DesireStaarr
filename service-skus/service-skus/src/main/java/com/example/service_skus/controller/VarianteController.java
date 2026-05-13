@@ -19,6 +19,7 @@ import com.example.service_skus.service.VarianteService;
 @RestController
 @RequestMapping("/skus")
 public class VarianteController {
+
     @Autowired
     private VarianteService varianteService;
 
@@ -28,15 +29,30 @@ public class VarianteController {
     }
 
     @GetMapping("/{sku}")
-    public ResponseEntity<VarianteSku> obtener(@PathVariable String sku){
-        return varianteService.buscarPorSku(sku)
-                              .map(ResponseEntity::ok)
-                              .orElse(ResponseEntity.notFound().build());
+    public ResponseEntity<VarianteSku> obtener(@PathVariable Long sku){
+        VarianteSku variante = varianteService.buscarPorId(sku);
+        if(variante!= null){
+            return ResponseEntity.ok(variante);
+        }
+        return ResponseEntity.notFound().build();
+    }
+
+
+     // Buscar todos los SKUs de un producto (ej: todas las tallas de una polera)
+    @GetMapping("/producto/{idProducto}")
+    public List<VarianteSku> porProducto(@PathVariable Long idProducto) {
+        return varianteService.buscarPorProducto(idProducto);
     }
 
     @GetMapping("/talla/{talla}")
     public List<VarianteSku> porTalla(@PathVariable String talla){
         return varianteService.buscarPorTalla(talla);
+    }
+
+
+    @GetMapping("/color/{color}")
+    public List<VarianteSku> porColor(@PathVariable String color) {
+        return varianteService.buscarPorColor(color);
     }
 
     @PostMapping
@@ -46,14 +62,14 @@ public class VarianteController {
 
 
     @PutMapping("/{sku}")
-    public VarianteSku actualizar(@PathVariable String sku, @RequestBody VarianteSku variante){
+    public VarianteSku actualizar(@PathVariable Long sku, @RequestBody VarianteSku variante){
         variante.setIdSku(sku);
         return varianteService.guardar(variante);
     }
 
 
     @DeleteMapping("/{sku}")
-    public ResponseEntity<Void> eliminar(@PathVariable String sku){
+    public ResponseEntity<Void> eliminar(@PathVariable Long sku){
         varianteService.eliminar(sku);
         return ResponseEntity.noContent().build(); //esto devuelve un estado 204
     }

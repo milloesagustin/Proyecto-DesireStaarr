@@ -1,10 +1,10 @@
 package com.example.service_skus.service;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.reactive.function.client.WebClient;
 
 import com.example.service_skus.model.VarianteSku;
 import com.example.service_skus.repository.VarianteRepository;
@@ -17,12 +17,35 @@ public class VarianteService {
     @Autowired
     private VarianteRepository varianteRepository;
 
+    @Autowired
+    private WebClient.Builder webClientBuilder;
+
     public List<VarianteSku> listarTodas(){
         return varianteRepository.findAll();
     }
 
-    public Optional<VarianteSku> buscarPorSku(String sku){
-        return varianteRepository.findById(sku);
+
+    // Buscar SKU por ID y enriquecer con datos del producto
+    public VarianteSku buscarPorId(Long idSku){
+        VarianteSku sku = varianteRepository.findById(idSku).orElse(null);
+        if(sku!=null){
+            return enriquecerConProducto(sku);
+        }
+        return null;
+    }
+
+    public List<VarianteSku> buscarPorProducto(Long idProducto) {
+        return varianteRepository.findByIdProducto(idProducto);
+    }
+
+
+    public List<VarianteSku> buscarPorColor(String color) {
+        return varianteRepository.findByColor(color);
+    }
+
+
+    public List<VarianteSku> buscarPorTalla(String talla){
+        return varianteRepository.findByTalla(talla);
     }
 
     @Transactional
@@ -30,12 +53,31 @@ public class VarianteService {
         return varianteRepository.save(variante);
     }
 
-    public List<VarianteSku> buscarPorTalla(String talla){
-        return varianteRepository.findByTalla(talla);
+    public void eliminar(Long idSku){
+        varianteRepository.deleteById(idSku);
     }
 
-    public void eliminar(String sku){
-        varianteRepository.deleteById(sku);
+    // Método privado que llama al service-productos (puerto 8081)
+    // Igual al patrón enriquecerConPaciente del profesor
+
+    private VarianteSku enriquecerConProducto(VarianteSku sku) {
+        if (sku.getIdProducto() != null) {
+            try {
+                Object producto = webClientBuilder.build()
+                        .get()
+                        .uri("http://localhost:8082/productos/" + sku.getIdProducto())
+                        .retrieve()
+                        .bodyToMono(Object.class)
+                        .block();
+
+                sku.setProducto(producto);
+            } catch (Exception e) {
+                sku.setProducto("Producto no disponible actualmente");
+            }
+        }
+        return sku;
     }
 
+
+    
 }
