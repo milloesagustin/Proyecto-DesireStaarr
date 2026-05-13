@@ -42,7 +42,7 @@ public class InventarioService {
     }
 
     public Optional<Inventario> buscarPorSku(Long idSku) {
-        Optional<Inventario> inv = repository.findByIdSku(idSku);
+        Optional<Inventario> inv = repository.findByidSku(idSku);
         inv.ifPresent(this::enriquecerConSku); // Si existe, lo enriquecemos
         return inv;
     }
@@ -67,7 +67,7 @@ public class InventarioService {
     @Transactional
     public Inventario actualizarStock(Long idSku, int nuevaCantidad) {
         
-        Inventario inv = repository.findByIdSku(idSku)
+        Inventario inv = repository.findByidSku(idSku)
                 .orElseThrow(() -> new RuntimeException("Inventario no encontrado para el SKU: " + idSku));
         
         inv.setCantidadActual(nuevaCantidad);

@@ -20,7 +20,7 @@ public class InventarioController {
         return service.listarTodo();
     }
 
-    @GetMapping("/sku/{IdSku}")
+    @GetMapping("/sku/{idSku}")
     public ResponseEntity<Inventario> obtenerPorSku(@PathVariable Long idSku) {
         return service.buscarPorSku(idSku)
                 .map(ResponseEntity::ok)
