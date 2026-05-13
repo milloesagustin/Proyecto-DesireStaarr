@@ -41,6 +41,16 @@ public class ClienteController {
         }
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<?> actualizar(@PathVariable Long id, @RequestBody Cliente cliente) {
+        try {
+            cliente.setId(id);
+            return ResponseEntity.ok(service.guardar(cliente));
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<String> eliminar(@PathVariable Long id) {
         service.eliminar(id);
