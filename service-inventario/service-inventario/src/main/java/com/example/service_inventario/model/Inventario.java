@@ -19,7 +19,7 @@ public class Inventario {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Long IdSku; 
+    private Long idSku; 
     private int cantidadActual;
     private int stockMinimo;
 

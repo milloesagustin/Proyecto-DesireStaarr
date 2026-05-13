@@ -18,6 +18,17 @@
             "mainClass": "com.example.service_skus.ServiceSkusApplication",
             "projectName": "service-skus",
             "args": "",
+            "envFile": "${workspaceFolder}/.env",
+            "vmArgs": " -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=49618 -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Dspring.jmx.enabled=true -Djava.rmi.server.hostname=localhost -Dspring.application.admin.enabled=true -Dspring.boot.project.name=service-skus"
+        },
+        {
+            "type": "java",
+            "name": "Spring Boot-ServiceInventarioApplication<service-inventario>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "com.example.service_inventario.ServiceInventarioApplication",
+            "projectName": "service-inventario",
+            "args": "",
             "envFile": "${workspaceFolder}/.env"
         }
     ]

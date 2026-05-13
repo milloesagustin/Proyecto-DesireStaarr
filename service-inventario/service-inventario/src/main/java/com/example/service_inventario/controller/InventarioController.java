@@ -21,8 +21,8 @@ public class InventarioController {
     }
 
     @GetMapping("/sku/{IdSku}")
-    public ResponseEntity<Inventario> obtenerPorSku(@PathVariable Long IdSku) {
-        return service.buscarPorSku(IdSku)
+    public ResponseEntity<Inventario> obtenerPorSku(@PathVariable Long idSku) {
+        return service.buscarPorSku(idSku)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
@@ -37,9 +37,9 @@ public class InventarioController {
     }
 
     @PutMapping("/actualizar/{IdSku}/{cantidad}")
-    public ResponseEntity<?> actualizar(@PathVariable Long IdSku, @PathVariable int cantidad) {
+    public ResponseEntity<?> actualizar(@PathVariable Long idSku, @PathVariable int cantidad) {
         try {
-            return ResponseEntity.ok(service.actualizarStock(IdSku, cantidad));
+            return ResponseEntity.ok(service.actualizarStock(idSku, cantidad));
         } catch (RuntimeException e) {
             return ResponseEntity.notFound().build();
         }

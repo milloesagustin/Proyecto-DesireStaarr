@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface InventarioRepository extends JpaRepository<Inventario, Long> {
     // usamos Optional para un solo resultado
-    Optional<Inventario> findBySkuId(Long IdSku);
+    Optional<Inventario> findByIdSku(Long idSku);
     
     List<Inventario> findByCantidadActualLessThan(int cantidad);
     List<Inventario> findByCantidadActualGreaterThan(int cantidad);

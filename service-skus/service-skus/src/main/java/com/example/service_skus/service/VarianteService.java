@@ -57,7 +57,7 @@ public class VarianteService {
         varianteRepository.deleteById(idSku);
     }
 
-    // Método privado que llama al service-productos (puerto 8081)
+    // Método privado que llama al service-productos (puerto 8082)
     // Igual al patrón enriquecerConPaciente del profesor
 
     private VarianteSku enriquecerConProducto(VarianteSku sku) {

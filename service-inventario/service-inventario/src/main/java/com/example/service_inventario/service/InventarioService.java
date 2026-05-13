@@ -25,7 +25,7 @@ public class InventarioService {
         try {
             Object skuDatos = webClientBuilder.build()
                     .get()
-                    .uri("http://localhost:8082/skus/" + inventario.getIdSku())
+                    .uri("http://localhost:8083/skus/" + inventario.getIdSku())
                     .retrieve()
                     .bodyToMono(Object.class)
                     .block();
@@ -41,8 +41,8 @@ public class InventarioService {
         return lista;
     }
 
-    public Optional<Inventario> buscarPorSku(Long IdSku) {
-        Optional<Inventario> inv = repository.findBySkuId(IdSku);
+    public Optional<Inventario> buscarPorSku(Long idSku) {
+        Optional<Inventario> inv = repository.findByIdSku(idSku);
         inv.ifPresent(this::enriquecerConSku); // Si existe, lo enriquecemos
         return inv;
     }
@@ -65,10 +65,10 @@ public class InventarioService {
     }
 
     @Transactional
-    public Inventario actualizarStock(Long IdSku, int nuevaCantidad) {
+    public Inventario actualizarStock(Long idSku, int nuevaCantidad) {
         
-        Inventario inv = repository.findBySkuId(IdSku)
-                .orElseThrow(() -> new RuntimeException("Inventario no encontrado para el SKU: " + IdSku));
+        Inventario inv = repository.findByIdSku(idSku)
+                .orElseThrow(() -> new RuntimeException("Inventario no encontrado para el SKU: " + idSku));
         
         inv.setCantidadActual(nuevaCantidad);
         return repository.save(inv);
