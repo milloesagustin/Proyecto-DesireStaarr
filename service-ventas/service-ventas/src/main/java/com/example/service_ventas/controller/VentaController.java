@@ -55,4 +55,14 @@ public class VentaController {
 
     
     }
+
+    @GetMapping("/estadisticas/mas-vendidos")
+    public List<Object[]> masVendidos() {
+        return ventaService.productosMasVendidos();
+    }
+
+    @GetMapping("/estadisticas/menos-vendidos")
+    public List<Object[]> menosVendidos() {
+        return ventaService.productosMenosVendidos();
+    }
 }

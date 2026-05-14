@@ -36,7 +36,7 @@ public class InventarioController {
         }
     }
 
-    @PutMapping("/actualizar/{IdSku}/{cantidad}")
+    @PutMapping("/actualizar/{idSku}/{cantidad}")
     public ResponseEntity<?> actualizar(@PathVariable Long idSku, @PathVariable int cantidad) {
         try {
             return ResponseEntity.ok(service.actualizarStock(idSku, cantidad));
@@ -44,6 +44,34 @@ public class InventarioController {
             return ResponseEntity.notFound().build();
         }
     }
-    
 
+    @GetMapping("/alertas")
+    public List<Inventario> alertasReposicion() {
+        return service.alertasReposicion();
+    }
+
+    @PutMapping("/sumar/{idSku}/{cantidad}")
+    public ResponseEntity<?> sumarStock(@PathVariable Long idSku, @PathVariable int cantidad) {
+        try {
+            return ResponseEntity.ok(service.sumarStock(idSku, cantidad));
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @PutMapping("/descontar/{idSku}/{cantidad}")
+    public ResponseEntity<?> descontarStock(@PathVariable Long idSku, @PathVariable int cantidad) {
+        try {
+            return ResponseEntity.ok(service.descontarStock(idSku, cantidad));
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @GetMapping("/existencias")
+    public List<Inventario> existencias() {
+        return service.stockPorSku();
+    }
+    
 }
+

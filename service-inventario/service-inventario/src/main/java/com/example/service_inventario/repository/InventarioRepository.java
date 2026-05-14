@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -14,5 +15,8 @@ public interface InventarioRepository extends JpaRepository<Inventario, Long> {
     
     List<Inventario> findByCantidadActualLessThan(int cantidad);
     List<Inventario> findByCantidadActualGreaterThan(int cantidad);
+
+    @Query("SELECT i FROM Inventario i ORDER BY i.idSku ASC")
+    List<Inventario> stockPorSku();
 
 }

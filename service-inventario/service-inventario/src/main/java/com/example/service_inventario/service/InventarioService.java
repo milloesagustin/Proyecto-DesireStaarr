@@ -47,6 +47,17 @@ public class InventarioService {
         return inv;
     }
 
+
+    public List<Inventario> alertasReposicion() {
+    List<Inventario> lista = repository.findByCantidadActualLessThan(0);
+    // Busca todos los que tienen cantidadActual menor o igual al stockMinimo
+    lista = repository.findAll().stream()
+            .filter(inv -> inv.getCantidadActual() <= inv.getStockMinimo())
+            .collect(java.util.stream.Collectors.toList());
+    lista.forEach(this::enriquecerConSku);
+    return lista;
+}
+
     @Transactional
     public Inventario crearEntrada(Inventario inventario) {
         // Validamos con WebClient que el SKU exista antes de crear el inventario
@@ -72,6 +83,31 @@ public class InventarioService {
         
         inv.setCantidadActual(nuevaCantidad);
         return repository.save(inv);
+    }
+
+    @Transactional
+    public Inventario sumarStock(Long idSku, int cantidad) {
+        Inventario inv = repository.findByidSku(idSku)
+                        .orElseThrow(() -> new RuntimeException("Inventario no encontrado para SKU: " + idSku));
+        inv.setCantidadActual(inv.getCantidadActual() + cantidad);
+        return repository.save(inv);
+    }
+
+    @Transactional
+    public Inventario descontarStock(Long idSku, int cantidad) {
+        Inventario inv = repository.findByidSku(idSku)
+                        .orElseThrow(() -> new RuntimeException("Inventario no encontrado para SKU: " + idSku));
+        if (inv.getCantidadActual() < cantidad) {
+            throw new RuntimeException("Stock insuficiente para SKU: " + idSku);
+        }
+        inv.setCantidadActual(inv.getCantidadActual() - cantidad);
+        return repository.save(inv);
+    }
+
+    public List<Inventario> stockPorSku() {
+        List<Inventario> lista = repository.stockPorSku();
+        lista.forEach(this::enriquecerConSku);
+        return lista;
     }
 
 }

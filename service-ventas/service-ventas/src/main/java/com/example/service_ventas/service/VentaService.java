@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
+import com.example.service_ventas.model.DetalleVenta;
 import com.example.service_ventas.model.Venta;
 import com.example.service_ventas.repository.VentaRepository;
 
@@ -50,10 +51,24 @@ public class VentaService {
 
     @Transactional
     public Venta guardar(Venta venta) {
-
         venta.setFechaHora(LocalDateTime.now());
         if (venta.getDetalles() != null) {
-            venta.getDetalles().forEach(detalle -> detalle.setVenta(venta));
+            double total = 0;
+            for (DetalleVenta detalle : venta.getDetalles()) {
+                detalle.setVenta(venta);
+                total += detalle.getCantidad() * detalle.getPrecioUnitario();
+                try {
+                    webClientBuilder.build()
+                            .put()
+                            .uri("http://localhost:8084/inventario/descontar/" + detalle.getSkuId() + "/" + detalle.getCantidad())
+                            .retrieve()
+                            .bodyToMono(Object.class)
+                            .block();
+                } catch (Exception e) {
+                    throw new RuntimeException("Error al descontar stock del SKU: " + detalle.getSkuId());
+                }
+            }
+            venta.setTotal(total);
         }
         return ventaRepository.save(venta);
     }
@@ -79,4 +94,14 @@ public class VentaService {
         }
         return venta;
     }
+
+    public List<Object[]> productosMasVendidos() {
+        return ventaRepository.productosMasVendidos();
+    }
+
+    public List<Object[]> productosMenosVendidos() {
+        return ventaRepository.productosMenosVendidos();
+    }
+
+    
 }
